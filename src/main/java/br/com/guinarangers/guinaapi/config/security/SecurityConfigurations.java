@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import br.com.guinarangers.guinaapi.repository.UsuarioRepository;
 
@@ -36,15 +37,18 @@ public class SecurityConfigurations {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.cors().and()
+
+                .csrf().disable()
                 .authorizeHttpRequests((authz) -> {
                     try {
                         authz
+
                                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                                //.antMatchers(HttpMethod.GET, "/test").permitAll()
+                                // .antMatchers(HttpMethod.GET, "/test").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
-                                .csrf().disable()
+
                                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                                 .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, repository),
                                         UsernamePasswordAuthenticationFilter.class);
@@ -54,7 +58,10 @@ public class SecurityConfigurations {
                 }
 
                 )
-                .httpBasic(withDefaults());
+
+                .httpBasic(withDefaults())
+
+                .headers().addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"));
 
         return http.build();
     }
