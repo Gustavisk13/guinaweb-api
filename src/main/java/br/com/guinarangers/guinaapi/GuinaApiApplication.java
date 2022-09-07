@@ -9,9 +9,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@EnableCaching
-@EnableWebMvc
 @EnableSpringDataWebSupport
+@EnableCaching
+
+@EnableWebMvc
 public class GuinaApiApplication {
 
 	public static void main(String[] args) {
