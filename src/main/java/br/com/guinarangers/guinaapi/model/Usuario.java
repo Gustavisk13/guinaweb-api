@@ -24,6 +24,7 @@ public class Usuario implements UserDetails {
     private String nome;
     private String email;
     private String senha;
+    private String foto;
     private LocalDateTime dataCriacao = LocalDateTime.now();
     private LocalDateTime dataAlteracao;
 
@@ -67,6 +68,8 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    
 
     public Long getId() {
         return id;
@@ -189,6 +192,14 @@ public class Usuario implements UserDetails {
         } else if (!senha.equals(other.senha))
             return false;
         return true;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
 }
