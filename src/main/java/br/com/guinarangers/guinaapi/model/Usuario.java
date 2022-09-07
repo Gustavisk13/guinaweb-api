@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 public class Usuario implements UserDetails {
 
@@ -25,6 +27,7 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
     private String foto;
+    
     private LocalDateTime dataCriacao = LocalDateTime.now();
     private LocalDateTime dataAlteracao;
 
@@ -69,8 +72,6 @@ public class Usuario implements UserDetails {
         return true;
     }
 
-    
-
     public Long getId() {
         return id;
     }
@@ -103,6 +104,7 @@ public class Usuario implements UserDetails {
         this.senha = senha;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
