@@ -1,6 +1,5 @@
 package br.com.guinarangers.guinaapi.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,15 +10,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Artigo {
+public class Artigo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
     private String conteudo;
-    private LocalDateTime dataCriacao = LocalDateTime.now();
-    private LocalDateTime dataAlteracao;
+    private String imagem;
+    private String thumbnail;
+
 
     @ManyToOne
     private Usuario autor;
@@ -31,15 +31,16 @@ public class Artigo {
     public Artigo() {
     }
 
-    public Artigo(String titulo, String conteudo, LocalDateTime dataAlteracao, Usuario autor, List<Tag> tags,
+    public Artigo(String titulo, String conteudo, Usuario autor, List<Tag> tags,
             List<Comentario> comentarios) {
         this.titulo = titulo;
         this.conteudo = conteudo;
-        this.dataAlteracao = dataAlteracao;
         this.autor = autor;
         this.tags = tags;
         this.comentarios = comentarios;
     }
+
+    
 
     public Long getId() {
         return id;
@@ -65,21 +66,7 @@ public class Artigo {
         this.conteudo = conteudo;
     }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
-    }
-
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
-    }
+    
 
     public Usuario getAutor() {
         return autor;
@@ -103,6 +90,22 @@ public class Artigo {
 
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
 }
