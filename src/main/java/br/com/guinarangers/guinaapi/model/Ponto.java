@@ -1,7 +1,5 @@
 package br.com.guinarangers.guinaapi.model;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,14 +7,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Ponto {
+public class Ponto extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long valor;
-    private LocalDateTime dataCriacao = LocalDateTime.now();
-    private LocalDateTime dataAlteracao;
 
     @OneToOne()
     private Usuario usuario;
@@ -37,21 +33,7 @@ public class Ponto {
         this.valor = valor;
     }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
-    }
-
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
-    }
+    
 
     public Usuario getUsuario() {
         return usuario;

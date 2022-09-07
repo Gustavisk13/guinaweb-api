@@ -45,6 +45,8 @@ public class SecurityConfigurations {
                         authz
 
                                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                                .antMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                                .antMatchers(HttpMethod.POST, "/usuarios/atualizarSenha").permitAll()
                                 // .antMatchers(HttpMethod.GET, "/test").permitAll()
                                 .anyRequest().authenticated()
                                 .and()

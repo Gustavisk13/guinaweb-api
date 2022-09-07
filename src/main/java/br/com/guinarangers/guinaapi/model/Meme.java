@@ -1,6 +1,5 @@
 package br.com.guinarangers.guinaapi.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,8 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Meme {
-    
+public class Meme extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,8 +19,6 @@ public class Meme {
     private String imagem;
     private Long likes;
     private Long deslikes;
-    private LocalDateTime dataCriacao = LocalDateTime.now();
-    private LocalDateTime dataAlteracao;
 
     @ManyToOne
     private Usuario autor;
@@ -33,10 +30,10 @@ public class Meme {
     public Meme() {
     }
 
-    public Meme(String titulo, String imagem, LocalDateTime dataAlteracao, Usuario autor) {
+    public Meme(String titulo, String imagem, Usuario autor) {
         this.titulo = titulo;
         this.imagem = imagem;
-        this.dataAlteracao = dataAlteracao;
+
         this.autor = autor;
     }
 
@@ -80,22 +77,6 @@ public class Meme {
         this.deslikes = deslikes;
     }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
-    }
-
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
-    }
-
     public Usuario getAutor() {
         return autor;
     }
@@ -119,7 +100,5 @@ public class Meme {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
-
-    
 
 }

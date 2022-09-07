@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.com.guinarangers.guinaapi.model.Usuario;
 
 public class UsuarioDto {
@@ -12,7 +14,9 @@ public class UsuarioDto {
     private String email;
     private String nome;
     private String foto;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataCriacao;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataAlteracao;
 
     public UsuarioDto(Usuario usuario) {
@@ -20,8 +24,8 @@ public class UsuarioDto {
         this.email = usuario.getEmail();
         this.nome = usuario.getNome();
         this.foto = usuario.getFoto();
-        this.dataCriacao = usuario.getDataCriacao();
-        this.dataAlteracao = usuario.getDataAlteracao();
+        this.dataCriacao = usuario.getCreatedAt();
+        this.dataAlteracao = usuario.getUpdatedAt();
     }
 
     public Long getId() {
