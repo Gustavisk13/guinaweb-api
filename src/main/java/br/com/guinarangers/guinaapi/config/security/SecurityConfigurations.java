@@ -43,11 +43,11 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests((authz) -> {
                     try {
                         authz
-
+                                .antMatchers(HttpMethod.GET, "/test").permitAll()
                                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                                .antMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                                .antMatchers(HttpMethod.POST, "/usuarios/atualizarSenha").permitAll()
-                                // .antMatchers(HttpMethod.GET, "/test").permitAll()
+                                .antMatchers(HttpMethod.GET, "/usuarios").permitAll()
+                                .antMatchers(HttpMethod.GET, "/usuarios/**").permitAll()
+
                                 .anyRequest().authenticated()
                                 .and()
 
