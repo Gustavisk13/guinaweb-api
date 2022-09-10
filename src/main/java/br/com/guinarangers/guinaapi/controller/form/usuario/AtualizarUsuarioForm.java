@@ -1,4 +1,4 @@
-package br.com.guinarangers.guinaapi.controller.form;
+package br.com.guinarangers.guinaapi.controller.form.usuario;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
