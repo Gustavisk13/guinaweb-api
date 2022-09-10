@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
+GREEN="\033[32m"
+NORMAL="\033[0m"
+
+PREVIOUSVERSION=$(sed 's:</span>:\n:g' src/main/resources/templates/teste.html | sed -n 's/.*>//p' | sed '/^ *$/d')
+echo -e "${GREEN}Previous version: ${PREVIOUSVERSION} ${NORMAL}"
+
 USERNAME=gustavisk
 IMAGE=guina-api
 
+
 read -p 'Insira a versão do git: ' VERSIONGIT
+
+sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>$VERSIONGIT<\/span>/g" src/main/resources/templates/teste.html
 
 git pull
 git add .

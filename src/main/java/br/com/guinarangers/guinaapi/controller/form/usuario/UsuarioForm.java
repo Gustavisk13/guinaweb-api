@@ -1,4 +1,4 @@
-package br.com.guinarangers.guinaapi.controller.form;
+package br.com.guinarangers.guinaapi.controller.form.usuario;
 
 import java.util.Arrays;
 

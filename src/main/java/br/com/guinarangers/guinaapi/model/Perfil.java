@@ -15,13 +15,18 @@ public class Perfil extends BaseEntity implements GrantedAuthority {
     private Long id;
     private String nome;
 
-
     @Override
     public String getAuthority() {
         return nome;
     }
 
+    public Perfil(String nome) {
 
+        this.nome = nome;
+    }
+
+    public Perfil() {
+    }
 
     public Long getId() {
         return id;
@@ -39,6 +44,11 @@ public class Perfil extends BaseEntity implements GrantedAuthority {
         this.nome = nome;
     }
 
+    @Override
+    public String toString() {
+        return "Perfil [id=" + id + ", nome=" + nome + "]";
+    }
 
+    
 
 }
