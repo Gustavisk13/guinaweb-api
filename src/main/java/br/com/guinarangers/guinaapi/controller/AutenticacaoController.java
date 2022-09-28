@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.guinarangers.guinaapi.config.security.TokenService;
 import br.com.guinarangers.guinaapi.controller.dto.TokenDto;
-import br.com.guinarangers.guinaapi.controller.form.LoginForm;
+import br.com.guinarangers.guinaapi.controller.form.usuario.LoginForm;
 
 @RestController
 @RequestMapping("auth")

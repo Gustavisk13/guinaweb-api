@@ -1,4 +1,4 @@
-package br.com.guinarangers.guinaapi.controller.form;
+package br.com.guinarangers.guinaapi.controller.form.usuario;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
