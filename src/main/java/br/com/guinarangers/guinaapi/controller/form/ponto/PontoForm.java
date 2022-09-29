@@ -1,18 +1,16 @@
 package br.com.guinarangers.guinaapi.controller.form.ponto;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
+import br.com.guinarangers.guinaapi.model.Ponto;
+import br.com.guinarangers.guinaapi.repository.UsuarioRepository;
 
 public class PontoForm {
 
     @NotNull
     private Long valor;
-    @NotEmpty
     @NotNull
-    @Length(min = 3)
-    private String usuario;
+    private Long usuario;
 
     public Long getValor() {
         return valor;
@@ -22,13 +20,20 @@ public class PontoForm {
         this.valor = valor;
     }
 
-    public String getUsuario() {
+    public Long getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(String usuario) {
+    public void setUsuario(Long usuario) {
         this.usuario = usuario;
     }
 
+    public Ponto converter(UsuarioRepository usuarioRepository) {
+        Ponto ponto = new Ponto();
+        ponto.setValor(valor);
+        ponto.setUsuario(usuarioRepository.findById(this.usuario).get());
+        return ponto;
+        
+    }
 
 }
