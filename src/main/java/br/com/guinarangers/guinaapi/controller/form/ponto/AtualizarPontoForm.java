@@ -32,12 +32,12 @@ public class AtualizarPontoForm {
         return ponto;
     }
 
-    public Optional<Object> remover (Long id, PontoRepository pontoRepository){
+    /* public Optional<Object> remover (Long id, PontoRepository pontoRepository){
         Ponto ponto = pontoRepository.findById(id).get();
         if (ponto.getValor().SIZE == 0) {
             return null;
         }
         ponto.setValor(ponto.getValor() - this.valor );
         return ponto;
-    }
+    } */
 }
