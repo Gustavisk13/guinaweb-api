@@ -71,10 +71,10 @@ public class PontoController {
             Ponto ponto = form.adicionar(id, pontoRepository);
             return ResponseEntity.ok(new PontoDto(ponto));
         }
-        if (remover && pOptional.isPresent()) {
+        /* if (remover && pOptional.isPresent()) {
             Ponto ponto = form.remover(id, pontoRepository);
             return ResponseEntity.ok(new PontoDto(ponto));
-        }
+        } */
 
         return ResponseEntity.notFound().build();
 
