@@ -41,7 +41,6 @@ public class AutenticacaoController {
         UsernamePasswordAuthenticationToken dadosLogin = form.converter();
         
 
-
         try {
             Authentication authentication = authManager.authenticate(dadosLogin);
 
