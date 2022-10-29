@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.guinarangers.guinaapi.config.security.TokenService;
-import br.com.guinarangers.guinaapi.controller.dto.TokenDto;
+import br.com.guinarangers.guinaapi.controller.dto.UserDetalhesAuthDto;
+import br.com.guinarangers.guinaapi.controller.dto.UsuarioAuth;
 import br.com.guinarangers.guinaapi.controller.form.usuario.LoginForm;
 import br.com.guinarangers.guinaapi.model.Usuario;
 import br.com.guinarangers.guinaapi.repository.UsuarioRepository;
@@ -35,7 +36,7 @@ public class AutenticacaoController {
     UsuarioRepository usuarioRepository;
     
     @PostMapping
-    public ResponseEntity<TokenDto> autenticar(@RequestBody @Valid LoginForm form) {
+    public ResponseEntity<UsuarioAuth> autenticar(@RequestBody @Valid LoginForm form) {
 
         UsernamePasswordAuthenticationToken dadosLogin = form.converter();
         
@@ -48,7 +49,7 @@ public class AutenticacaoController {
 
             Usuario userDetails = usuarioRepository.findByEmail(dadosLogin.getName()).get();
 
-            return ResponseEntity.ok(new TokenDto(token, "Bearer",userDetails.getId(),userDetails.getNome(),userDetails.getEmail()));
+            return ResponseEntity.ok(new UsuarioAuth(new UserDetalhesAuthDto(userDetails.getNome(), userDetails.getEmail(),userDetails.getId()),token));
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().build();
         }
