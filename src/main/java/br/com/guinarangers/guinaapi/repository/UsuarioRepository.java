@@ -10,7 +10,11 @@ import br.com.guinarangers.guinaapi.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByEmail(String email);
-
+    
     List<Usuario> findByNome(String nome);
+
+    List<Usuario> findByNomeContainingIgnoreCase(String nome);  
+
+    
 
 }

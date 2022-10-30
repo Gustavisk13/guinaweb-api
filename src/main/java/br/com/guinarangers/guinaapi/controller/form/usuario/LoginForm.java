@@ -1,30 +1,30 @@
-package br.com.guinarangers.guinaapi.controller.form;
+package br.com.guinarangers.guinaapi.controller.form.usuario;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public class LoginForm {
 
     private String email;
-    private String senha;
+    private String password;
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setpassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getpassword() {
+        return password;
     }
 
     public UsernamePasswordAuthenticationToken converter() {
-        return new UsernamePasswordAuthenticationToken(email, senha);
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.guinarangers.guinaapi.controller;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -80,12 +81,17 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(new EmailJaCadastradoDto("Email já cadastrado",
                     "O email já foi cadastrado, verificar informações sendo enviadas"));
         }
-        
+
         if (!usuarioRepository.findByNome(usuarioForm.getNome()).isEmpty()) {
-            return ResponseEntity.badRequest().body(new NomeJaCadastradoDto("Nome já cadastrado", "Este nome já existe na base"));
+            return ResponseEntity.badRequest()
+                    .body(new NomeJaCadastradoDto("Nome já cadastrado", "Este nome já existe na base"));
         }
 
         Usuario usuario = usuarioForm.profileConverter(perfilRepository);
+
+        if (usuarioForm.getPerfil() == null) {
+            usuario.setPerfis(Arrays.asList(perfilRepository.findById(Long.valueOf(1)).get()));
+        }
 
         usuarioRepository.save(usuario);
 
@@ -96,7 +102,8 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Object> update(@PathVariable("id") Long id, @RequestBody @Valid AtualizarUsuarioForm atualizarUsuarioForm){
+    public ResponseEntity<Object> update(@PathVariable("id") Long id,
+            @RequestBody @Valid AtualizarUsuarioForm atualizarUsuarioForm) {
         Optional<Usuario> uOptional = usuarioRepository.findById(id);
         if (uOptional.isPresent()) {
             Usuario usuario = atualizarUsuarioForm.update(id, usuarioRepository);
@@ -108,7 +115,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     @Transactional
     @CacheEvict(value = "allUsers", allEntries = true)
-    public ResponseEntity<Object> delete(@PathVariable("id") Long id){
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
         Optional<Usuario> uOptional = usuarioRepository.findById(id);
         if (uOptional.isPresent()) {
             usuarioRepository.deleteById(id);
@@ -116,14 +123,21 @@ public class UsuarioController {
         }
         return ResponseEntity.notFound().build();
     }
-    //TODO criar atualizacao de senha
-   /*  @PostMapping("/atualizarSenha")
-    @Transactional
-    @PreAuthorize("hasRole('ROLE_ALUNO')")
-    public ResponseEntity<Object> updatePassworld(Locale locale, @RequestBody String password, String oldPassword){
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        System.out.println(usuario.toString());
-        return null;
-    } */
+    // TODO criar atualizacao de senha
+    /*
+     * @PostMapping("/atualizarSenha")
+     * 
+     * @Transactional
+     * 
+     * @PreAuthorize("hasRole('ROLE_ALUNO')")
+     * public ResponseEntity<Object> updatePassworld(Locale locale, @RequestBody
+     * String password, String oldPassword){
+     * Optional<Usuario> usuario =
+     * usuarioRepository.findByEmail(SecurityContextHolder.getContext().
+     * getAuthentication().getName());
+     * System.out.println(usuario.toString());
+     * return null;
+     * }
+     */
 
 }

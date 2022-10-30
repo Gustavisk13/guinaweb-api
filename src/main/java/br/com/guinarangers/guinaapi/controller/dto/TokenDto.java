@@ -2,20 +2,26 @@ package br.com.guinarangers.guinaapi.controller.dto;
 
 public class TokenDto {
 
-    private String token;
-    private String tipo;
 
-    public TokenDto(String token, String tipo) {
-        this.token = token;
-        this.tipo = tipo;
+    private String accessToken;
+    private String type;
+
+    public TokenDto(String accessToken, String type) {
+        this.accessToken = accessToken;
+        this.type = type;
+      
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String gettype() {
+        return type;
     }
+
+   
+
+    
 
 }

@@ -17,6 +17,14 @@ public class Ponto extends BaseEntity {
     @OneToOne()
     private Usuario usuario;
 
+    public Ponto() {
+    }
+
+    public Ponto(Long valor, Usuario usuario) {
+        this.valor = valor;
+        this.usuario = usuario;
+    }
+
     public Long getId() {
         return id;
     }
