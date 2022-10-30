@@ -35,6 +35,9 @@ public class Comentario extends BaseEntity {
         this.autor = autor;
     }
 
+    public Comentario() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -66,8 +69,6 @@ public class Comentario extends BaseEntity {
     public void setDeslikes(Long deslikes) {
         this.deslikes = deslikes;
     }
-
-    
 
     public Usuario getAutor() {
         return autor;
