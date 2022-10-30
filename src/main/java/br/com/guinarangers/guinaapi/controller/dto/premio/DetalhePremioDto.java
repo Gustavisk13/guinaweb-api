@@ -3,6 +3,7 @@ package br.com.guinarangers.guinaapi.controller.dto.premio;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.guinarangers.guinaapi.model.Premio;
 
@@ -26,44 +27,29 @@ public class DetalhePremioDto {
         this.dataAlteracao = premio.getUpdatedAt();
     }
 
+    @JsonProperty("id")
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    @JsonProperty("name")
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
+    @JsonProperty("image")
     public String getImagem() {
         return imagem;
     }
 
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
+    @JsonProperty("created_at")
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
+    @JsonProperty("updated_at")
     public LocalDateTime getDataAlteracao() {
         return dataAlteracao;
-    }
-
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
     }
 
     

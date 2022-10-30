@@ -2,6 +2,8 @@ package br.com.guinarangers.guinaapi.controller.dto.premio;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.com.guinarangers.guinaapi.model.Premio;
 
 public class PremioDto {
@@ -13,12 +15,9 @@ public class PremioDto {
 
     }
 
+    @JsonProperty("name")
     public String getNome() {
         return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public static Page<PremioDto> convertToPage(Page<Premio> premios) {
