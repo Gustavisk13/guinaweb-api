@@ -89,7 +89,7 @@ public class UsuarioController {
 
         Usuario usuario = usuarioForm.profileConverter(perfilRepository);
 
-        if (usuarioForm.getPerfil() != null) {
+        if (usuarioForm.getPerfil() == null) {
             usuario.setPerfis(Arrays.asList(perfilRepository.findById(Long.valueOf(1)).get()));
         }
 

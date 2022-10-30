@@ -2,36 +2,31 @@ package br.com.guinarangers.guinaapi.controller.dto.ponto;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.com.guinarangers.guinaapi.model.Ponto;
 
 public class PontoDto {
     
-    private Long id_usuario;
-    private Long valor;
+    private String usuario;
+    private Long value;
 
     public PontoDto(Ponto ponto) {
-        this.id_usuario = ponto.getUsuario().getId();
-        this.valor = ponto.getValor();
+        this.usuario = ponto.getUsuario().getNome();
+        this.value = ponto.getValor();
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    @JsonProperty("user")
+    public String getUsuario() {
+        return usuario;
+    }
+    public Long getValue() {
+        return value;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
-    }
 
-    public Long getValor() {
-        return valor;
-    }
-
-    public void setValor(Long valor) {
-        this.valor = valor;
-    }
-
-    Page<PontoDto> convertToPage(Page<Ponto> pontos) {
+    
+    public static Page<PontoDto> convertToPage(Page<Ponto> pontos) {
         return pontos.map(PontoDto::new);
     }
-    
 }

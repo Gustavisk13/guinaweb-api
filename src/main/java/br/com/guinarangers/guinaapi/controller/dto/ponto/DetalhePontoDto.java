@@ -8,64 +8,71 @@ import br.com.guinarangers.guinaapi.model.Ponto;
 
 public class DetalhePontoDto {
 
-    private Long id;
-    private Long id_usuario;
-    private Long valor;
+    private Long pointId;
+    private String user;
+    private Long value;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dataCriacao;
+    private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dataAlteracao;
+    private LocalDateTime alteredAt;
 
     public DetalhePontoDto(Ponto ponto) {
-        this.id = ponto.getId();
-        this.id_usuario = ponto.getUsuario().getId();
-        this.valor = ponto.getValor();
-        this.dataCriacao = ponto.getCreatedAt();
-        this.dataAlteracao = ponto.getUpdatedAt();
+        this.pointId = ponto.getId();
+        this.user = ponto.getUsuario().getNome();
+        this.value = ponto.getValor();
+        this.createdAt = ponto.getCreatedAt();
+        this.alteredAt = ponto.getUpdatedAt();
     }
 
-    public Long getId() {
-        return id;
+    public Long getValue() {
+        return value;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setValue(Long value) {
+        this.value = value;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Long getValor() {
-        return valor;
+    public LocalDateTime getAlteredAt() {
+        return alteredAt;
     }
 
-    public void setValor(Long valor) {
-        this.valor = valor;
+    public void setAlteredAt(LocalDateTime alteredAt) {
+        this.alteredAt = alteredAt;
     }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
+    public String getUser() {
+        return user;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
+
+
+    public Long getPointId() {
+        return pointId;
     }
 
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
+
+
+    public void setPointId(Long pointId) {
+        this.pointId = pointId;
     }
 
+    
+
+    
     
 
 }

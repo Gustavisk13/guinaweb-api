@@ -10,7 +10,7 @@ public class PontoForm {
     @NotNull
     private Long valor;
     @NotNull
-    private Long usuario;
+    private Long user;
 
     public Long getValor() {
         return valor;
@@ -20,18 +20,18 @@ public class PontoForm {
         this.valor = valor;
     }
 
-    public Long getUsuario() {
-        return usuario;
+    public Long getUser() {
+        return user;
     }
 
-    public void setUsuario(Long usuario) {
-        this.usuario = usuario;
+    public void setUser(Long user) {
+        this.user = user;
     }
 
     public Ponto converter(UsuarioRepository usuarioRepository) {
         Ponto ponto = new Ponto();
         ponto.setValor(valor);
-        ponto.setUsuario(usuarioRepository.findById(this.usuario).get());
+        ponto.setUsuario(usuarioRepository.findById(this.user).get());
         return ponto;
         
     }

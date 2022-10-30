@@ -1,7 +1,5 @@
 package br.com.guinarangers.guinaapi.controller.form.ponto;
 
-import java.util.Optional;
-
 import javax.validation.constraints.NotNull;
 
 import br.com.guinarangers.guinaapi.model.Ponto;
@@ -27,17 +25,17 @@ public class AtualizarPontoForm {
     }
 
     public Ponto adicionar (Long id, PontoRepository pontoRepository){
-        Ponto ponto = pontoRepository.findById(id).get();
+        Ponto ponto = pontoRepository.findByusuario_id(id).get();
         ponto.setValor(this.valor + ponto.getValor());
         return ponto;
     }
 
-    /* public Optional<Object> remover (Long id, PontoRepository pontoRepository){
-        Ponto ponto = pontoRepository.findById(id).get();
-        if (ponto.getValor().SIZE == 0) {
+    public Ponto remover (Long id, PontoRepository pontoRepository){
+        Ponto ponto = pontoRepository.findByusuario_id(id).get();
+        if (ponto.getValor() == 0 || ponto.getValor() < this.valor){
             return null;
         }
         ponto.setValor(ponto.getValor() - this.valor );
         return ponto;
-    } */
+    }
 }

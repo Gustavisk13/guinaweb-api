@@ -8,5 +8,10 @@ import br.com.guinarangers.guinaapi.model.Ponto;
 import br.com.guinarangers.guinaapi.model.Usuario;
 
 public interface PontoRepository extends JpaRepository<Ponto, Long> {
+
     Optional<Ponto> findByUsuario(Usuario usuario);
+
+    Optional<Ponto> findByusuario_id(Long usuario_id);
+
+
 }
