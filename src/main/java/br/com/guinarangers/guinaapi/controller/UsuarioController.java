@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.guinarangers.guinaapi.config.validacao.EmailJaCadastradoDto;
-import br.com.guinarangers.guinaapi.config.validacao.NomeJaCadastradoDto;
+import br.com.guinarangers.guinaapi.controller.dto.DefaultInfoDto;
 import br.com.guinarangers.guinaapi.controller.dto.usuario.DetalheUsuarioDto;
 import br.com.guinarangers.guinaapi.controller.dto.usuario.UsuarioDto;
 import br.com.guinarangers.guinaapi.controller.form.usuario.AtualizarUsuarioForm;
@@ -78,13 +77,12 @@ public class UsuarioController {
     public ResponseEntity<Object> store(@RequestBody @Valid UsuarioForm usuarioForm, UriComponentsBuilder uriBuilder) {
 
         if (usuarioRepository.findByEmail(usuarioForm.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body(new EmailJaCadastradoDto("Email já cadastrado",
-                    "O email já foi cadastrado, verificar informações sendo enviadas"));
+            return ResponseEntity.badRequest().body(new DefaultInfoDto("Email já cadastrado"));
         }
 
         if (!usuarioRepository.findByNome(usuarioForm.getNome()).isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body(new NomeJaCadastradoDto("Nome já cadastrado", "Este nome já existe na base"));
+                    .body(new DefaultInfoDto("Já existe um usuário cadastrado com esse nome"));
         }
 
         Usuario usuario = usuarioForm.profileConverter(perfilRepository);

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.guinarangers.guinaapi.config.validacao.NomeJaCadastradoDto;
+import br.com.guinarangers.guinaapi.controller.dto.DefaultInfoDto;
 import br.com.guinarangers.guinaapi.controller.dto.premio.DetalhePremioDto;
 import br.com.guinarangers.guinaapi.controller.dto.premio.PremioDto;
 import br.com.guinarangers.guinaapi.controller.form.premio.PremioForm;
@@ -64,7 +64,7 @@ public class PremioController {
     public ResponseEntity<Object> create(@RequestBody @Valid PremioForm premioForm, UriComponentsBuilder uriBuilder){
 
         if (premioRepository.findByNome(premioForm.getNome()).isPresent()) {
-            return ResponseEntity.badRequest().body(new NomeJaCadastradoDto("Este premio ja foi cadastrado!", premioForm.getNome()));
+            return ResponseEntity.badRequest().body(new DefaultInfoDto("Já existe um prêmio com esse nome"));
         }
          
         Premio premio = premioForm.convertToPremio();

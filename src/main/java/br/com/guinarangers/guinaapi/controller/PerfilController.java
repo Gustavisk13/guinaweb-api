@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.guinarangers.guinaapi.config.validacao.NomeJaCadastradoDto;
-import br.com.guinarangers.guinaapi.config.validacao.PerfilSemPermissaoDto;
+import br.com.guinarangers.guinaapi.controller.dto.DefaultInfoDto;
 import br.com.guinarangers.guinaapi.controller.dto.perfil.DetalhePerfilDto;
 import br.com.guinarangers.guinaapi.controller.dto.perfil.PerfilDto;
 import br.com.guinarangers.guinaapi.controller.form.perfil.AtualizarPerfilForm;
@@ -80,7 +79,7 @@ public class PerfilController {
 
         if (perfilRepository.findByNome(perfil.getNome()) != null) {
             return ResponseEntity.badRequest()
-                    .body(new NomeJaCadastradoDto("Nome já cadastrado", "Este nome já existe na base"));
+                    .body(new DefaultInfoDto("Nome de perfil já cadastrado"));
         }
 
         System.out.println(perfil.toString());
@@ -109,7 +108,7 @@ public class PerfilController {
     public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
 
         if (!checkAuthority.hasAuthority("ROLE_ADMIN")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new PerfilSemPermissaoDto("Procure um administrador", "Este perfil não possui permissão para esta açao"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new DefaultInfoDto("Você não tem permissão para excluir um perfil"));
         }
 
         Optional<Perfil> pOptional = perfilRepository.findById(id);

@@ -28,7 +28,7 @@ public class StorageService {
     private AmazonClient amazonClient;
 
 
-    public void uploadFile(String base64, String fileName) {
+    public String uploadFile(String base64, String fileName) {
 
         try {
             byte[] decodedBytes = Base64.decodeBase64(base64.getBytes());
@@ -37,6 +37,7 @@ public class StorageService {
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType("image/jpeg");
+            metadata.setContentLength(decodedBytes.length);
 
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, inputStream, metadata);
 
@@ -47,10 +48,23 @@ public class StorageService {
 
             
             amazonClient.s3client.putObject(putObjectRequest);
+
+            return amazonClient.s3client.getUrl(bucketName, fileName).toString();
         } catch (AmazonServiceException e) {
             e.printStackTrace();
+            return null;
         }
 
+    }
+
+    public void deleteFile(String fileName) {
+        try {
+            amazonClient.s3client.deleteObject(bucketName, fileName);
+            
+        } catch (AmazonServiceException e) {
+            e.printStackTrace();
+            
+        }
     }
 
 }

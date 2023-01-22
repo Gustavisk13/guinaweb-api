@@ -12,15 +12,15 @@ public class ArtigoForm {
     private String title;
     @NotNull @Length(min = 5)
     private String content;
-    
+    @NotNull
     private String image;
+    @NotNull
     private String thumbnail;
     @NotNull
     private Long author;
     @NotNull
     private List<Long> tags;
-    @NotNull
-    private List<Long> comments;
+   
 
     public String getTitle() {
         return title;
@@ -35,6 +35,7 @@ public class ArtigoForm {
         this.content = content;
     }
     public String getImage() {
+        
         return image.split(",")[1];
     }
     public void setImage(String image) {
@@ -58,14 +59,5 @@ public class ArtigoForm {
     public void setTags(List<Long> tags) {
         this.tags = tags;
     }
-    public List<Long> getComments() {
-        return comments;
-    }
-    public void setComments(List<Long> comments) {
-        this.comments = comments;
-    }
-
-    
-    
     
 }
