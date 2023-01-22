@@ -21,9 +21,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +37,7 @@ import br.com.guinarangers.guinaapi.controller.dto.DefaultInfoDto;
 import br.com.guinarangers.guinaapi.controller.dto.artigo.ArtigoDetalhesDto;
 import br.com.guinarangers.guinaapi.controller.dto.artigo.ArtigoDto;
 import br.com.guinarangers.guinaapi.controller.form.artigo.ArtigoForm;
+import br.com.guinarangers.guinaapi.controller.form.artigo.AtualizarArtigoForm;
 import br.com.guinarangers.guinaapi.enums.StorageFileTypeEnum;
 import br.com.guinarangers.guinaapi.model.Artigo;
 import br.com.guinarangers.guinaapi.model.Comentario;
@@ -68,7 +71,7 @@ public class ArtigoController {
     @GetMapping
     @Cacheable(value = "allArticles")
     public Page<ArtigoDto> listAll(@RequestParam(required = false) String usuarioEmail,
-    @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable paginacao) {
+            @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable paginacao) {
         Page<Artigo> artigos = artigoRepository.findAll(paginacao);
         return ArtigoDto.convertToPage(artigos);
     }
@@ -110,9 +113,10 @@ public class ArtigoController {
                 tags.add(tagRepository.findById(tagId).get());
             }
 
-            imageUrl = manageArticleImages(form.getImage(), form.getTitle(), StorageFileTypeEnum.ARTICLE);
+            imageUrl = manageArticleImages(form.getImage(), form.getTitle(), StorageFileTypeEnum.ARTICLE, false);
 
-            thumbnailUrl = manageArticleImages(form.getThumbnail(), form.getTitle(), StorageFileTypeEnum.THUMBNAIL);
+            thumbnailUrl = manageArticleImages(form.getThumbnail(), form.getTitle(), StorageFileTypeEnum.THUMBNAIL,
+                    false);
 
             if (thumbnailUrl.equals("") || imageUrl.equals("")) {
                 return ResponseEntity.status(510).body(new DefaultInfoDto("AWS S3 error"));
@@ -138,7 +142,61 @@ public class ArtigoController {
         }
     }
 
-    public String manageArticleImages(String imageData, String title, StorageFileTypeEnum fileType) {
+    @PutMapping("/{id}")
+    @Transactional
+    @CacheEvict(value = "allArticles", allEntries = true)
+    public ResponseEntity<Object> update(@PathVariable("id") Long id,
+            @RequestBody @Valid AtualizarArtigoForm atualizarArtigoForm) {
+        Optional<Artigo> aOptional = artigoRepository.findById(id);
+        if (aOptional.isPresent()) {
+            String imageUrl = "";
+            String thumbnailUrl = "";
+            try {
+
+                imageUrl = manageArticleImages(atualizarArtigoForm.getImage(), atualizarArtigoForm.getTitle(),
+                        StorageFileTypeEnum.ARTICLE, true);
+
+                thumbnailUrl = manageArticleImages(atualizarArtigoForm.getThumbnail(), atualizarArtigoForm.getTitle(),
+                        StorageFileTypeEnum.THUMBNAIL, true);
+                if (thumbnailUrl.equals("") || imageUrl.equals("")) {
+                    return ResponseEntity.status(510).body(new DefaultInfoDto("AWS S3 error"));
+                }
+
+                Artigo artigo = atualizarArtigoForm.update(id, artigoRepository, tagRepository, imageUrl, thumbnailUrl);
+                return ResponseEntity.ok(new ArtigoDto(artigo));
+
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new DefaultErrorDto("Ocorreu um erro ao atualizar o artigo", e.getMessage()));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DefaultInfoDto("Artigo não encontrado"));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    @CacheEvict(value = "allArticles", allEntries = true)
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
+        Optional<Artigo> aOptional = artigoRepository.findById(id);
+        if (aOptional.isPresent()) {
+            try {
+                Artigo artigo = aOptional.get();
+                artigoRepository.delete(artigo);
+                storageService.deleteFile(artigo.getImagem().split("/")[artigo.getImagem().split("/").length - 1]);
+                storageService.deleteFile(artigo.getThumbnail().split("/")[artigo.getThumbnail().split("/").length - 1]);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new DefaultErrorDto("Ocorreu um erro ao deletar o artigo", e.getMessage()));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DefaultInfoDto("Artigo não encontrado"));
+    }
+
+    public String manageArticleImages(String imageData, String title, StorageFileTypeEnum fileType, Boolean isUpdate) {
         String imageUrl;
 
         if (!Helpers.isBase64(imageData)) {
@@ -151,7 +209,7 @@ public class ArtigoController {
             return "";
         }
 
-        imageUrl = storageService.uploadFile(imageData.split(",")[0], generateFileName(title, fileType));
+        imageUrl = storageService.uploadFile(imageData.split(",")[0], generateFileName(title, fileType), isUpdate);
 
         if (imageUrl.equals("")) {
             logger.info("Image url is empty");

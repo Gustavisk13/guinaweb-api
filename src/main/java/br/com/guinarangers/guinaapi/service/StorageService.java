@@ -28,7 +28,7 @@ public class StorageService {
     private AmazonClient amazonClient;
 
 
-    public String uploadFile(String base64, String fileName) {
+    public String uploadFile(String base64, String fileName, Boolean isUpdate) {
 
         try {
             byte[] decodedBytes = Base64.decodeBase64(base64.getBytes());
@@ -46,6 +46,9 @@ public class StorageService {
 
             putObjectRequest.setTagging(new ObjectTagging(tags));
 
+            if (isUpdate) {
+                amazonClient.s3client.deleteObject(bucketName, fileName);
+            }
             
             amazonClient.s3client.putObject(putObjectRequest);
 
