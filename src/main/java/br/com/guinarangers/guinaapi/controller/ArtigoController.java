@@ -12,17 +12,27 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.guinarangers.guinaapi.controller.dto.DefaultErrorDto;
 import br.com.guinarangers.guinaapi.controller.dto.DefaultInfoDto;
+import br.com.guinarangers.guinaapi.controller.dto.artigo.ArtigoDetalhesDto;
 import br.com.guinarangers.guinaapi.controller.dto.artigo.ArtigoDto;
 import br.com.guinarangers.guinaapi.controller.form.artigo.ArtigoForm;
 import br.com.guinarangers.guinaapi.enums.StorageFileTypeEnum;
@@ -55,8 +65,26 @@ public class ArtigoController {
     @Autowired
     TagRepository tagRepository;
 
+    @GetMapping
+    @Cacheable(value = "allArticles")
+    public Page<ArtigoDto> listAll(@RequestParam(required = false) String usuarioEmail,
+    @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable paginacao) {
+        Page<Artigo> artigos = artigoRepository.findAll(paginacao);
+        return ArtigoDto.convertToPage(artigos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> show(@PathVariable("id") Long id) {
+        Optional<Artigo> artigo = artigoRepository.findById(id);
+        if (artigo.isPresent()) {
+            return ResponseEntity.ok(new ArtigoDetalhesDto(artigo.get()));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DefaultInfoDto("Artigo não encontrado"));
+    }
+
     @PostMapping
     @Transactional
+    @CacheEvict(value = "allArticles", allEntries = true)
     public ResponseEntity<Object> store(@RequestBody @Valid ArtigoForm form, UriComponentsBuilder uriBuilder) {
         Artigo artigo;
         List<Tag> tags = new ArrayList<Tag>();

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import br.com.guinarangers.guinaapi.controller.dto.tag.TagDto;
+
 @Entity
 public class Artigo extends BaseEntity {
 
@@ -79,6 +81,10 @@ public class Artigo extends BaseEntity {
 
     public List<Tag> getTags() {
         return tags;
+    }
+
+    public List<TagDto> getTagsDto() {
+        return TagDto.convertToDto(this.tags);
     }
 
     public void setTags(List<Tag> tags) {
