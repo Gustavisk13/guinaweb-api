@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.guinarangers.guinaapi.controller.dto.DefaultErrorDto;
+
 @RestControllerAdvice
 public class ErroDeValidacaoHandler {
 
@@ -21,13 +23,13 @@ public class ErroDeValidacaoHandler {
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public List<ErroDeFormularioDTO> handle(MethodArgumentNotValidException exception) {
+    public List<DefaultErrorDto> handle(MethodArgumentNotValidException exception) {
 
-        List<ErroDeFormularioDTO> erros = new ArrayList<>();
+        List<DefaultErrorDto> erros = new ArrayList<>();
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         fieldErrors.forEach(e -> {
             String mensagem = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-            ErroDeFormularioDTO erro = new ErroDeFormularioDTO(e.getField(), mensagem);
+            DefaultErrorDto erro = new DefaultErrorDto(mensagem, e.getField());
             erros.add(erro);
         });
 

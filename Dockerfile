@@ -1,4 +1,4 @@
-FROM openjdk:18.0.2-jdk-oracle
+FROM openjdk:18.0.2-jdk
 #RUN addgroup -S spring && adduser -S spring -G spring
 #USER spring:spring
 ARG JAR_FILE=target/*.jar

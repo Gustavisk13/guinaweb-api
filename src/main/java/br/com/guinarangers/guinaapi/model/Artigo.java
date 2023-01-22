@@ -2,12 +2,15 @@ package br.com.guinarangers.guinaapi.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
+import br.com.guinarangers.guinaapi.controller.dto.tag.TagDto;
 
 @Entity
 public class Artigo extends BaseEntity {
@@ -16,31 +19,33 @@ public class Artigo extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
+    @Column(columnDefinition = "TEXT")
     private String conteudo;
     private String imagem;
     private String thumbnail;
 
-
     @ManyToOne
     private Usuario autor;
-    @OneToMany
+    
+    @ManyToMany
     private List<Tag> tags;
-    @OneToMany
+
+    @ManyToMany
     private List<Comentario> comentarios;
 
     public Artigo() {
     }
 
-    public Artigo(String titulo, String conteudo, Usuario autor, List<Tag> tags,
-            List<Comentario> comentarios) {
+    public Artigo(String titulo, String conteudo, String imagem, String thumbnail, Usuario autor,
+            List<Tag> tags, List<Comentario> comentarios) {
         this.titulo = titulo;
         this.conteudo = conteudo;
+        this.imagem = imagem;
+        this.thumbnail = thumbnail;
         this.autor = autor;
         this.tags = tags;
         this.comentarios = comentarios;
     }
-
-    
 
     public Long getId() {
         return id;
@@ -66,8 +71,6 @@ public class Artigo extends BaseEntity {
         this.conteudo = conteudo;
     }
 
-    
-
     public Usuario getAutor() {
         return autor;
     }
@@ -78,6 +81,10 @@ public class Artigo extends BaseEntity {
 
     public List<Tag> getTags() {
         return tags;
+    }
+
+    public List<TagDto> getTagsDto() {
+        return TagDto.convertToDto(this.tags);
     }
 
     public void setTags(List<Tag> tags) {
