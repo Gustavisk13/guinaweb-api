@@ -26,16 +26,23 @@ jobs:
           username: ${{ env.USERNAME }}
           password: ${{ env.PASSWORD }}
 
+      - name: Get next version
+        uses: reecetech/version-increment@2023.4.1
+        id: version
+        with:
+          scheme: semver
+          increment: patch
+
       - name: Metadata
         id: metadata
         uses: docker/metadata-action@v3
         with:
           images: gustavisk/guina-api
-          tags: latest
+          tags: ${{ steps.version.outputs.version }}
 
       - name: Version
-        id: version
-        run: sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>${{ steps.metadata.outputs.tags }}<\/span>/g" src/main/resources/templates/teste.html
+        id: versionname
+        run: sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>${{ steps.version.outputs.version }}<\/span>/g" src/main/resources/templates/teste.html
 
       - name: Build and push
         uses: docker/build-push-action@v2
