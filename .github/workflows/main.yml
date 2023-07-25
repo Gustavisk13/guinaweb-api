@@ -44,6 +44,14 @@ jobs:
         id: versionname
         run: sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>${{ steps.version.outputs.version }}<\/span>/g" src/main/resources/templates/teste.html
 
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
