@@ -1,1 +1,59 @@
+name: Publish Docker Image
+on:
+  push:
+    branches:
+      - main
 
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+
+jobs:
+  push_to_hub:
+    name: Push to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Metadata
+        id: metadata
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.DOCKER_USERNAME }}/guina-api
+          tags: latest
+
+      - name: Version
+        id: version
+        run: sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>${{ steps.metadata.outputs.tags }}<\/span>/g" src/main/resources/templates/teste.html
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    needs: push_to_hub
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy
+        run: |
+          cd scripts
+          chmod +x deploy.sh
+          ./deploy.sh
