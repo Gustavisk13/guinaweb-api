@@ -33,7 +33,7 @@ jobs:
           WITH_V: false
 
       - name: New version
-        run: mvn versions:set -DnewVersion=${{ steps.taggerDryRun.outputs }}
+        run: mvn versions:set -DnewVersion=${{ steps.taggerDryRun.outputs.new_tag }}
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
@@ -56,7 +56,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: gustavisk/guina-api
-          tags: ${{ steps.taggerDryRun.outputs }}
+          tags: ${{ steps.taggerDryRun.outputs.new_tag }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
