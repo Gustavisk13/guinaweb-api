@@ -13,9 +13,10 @@ env:
   SSH_KEY: ${{ secrets.SSH_KEY }}
 
 jobs:
-  build:
-    name: Build
+  build_push_to_hub:
+    name: Build and Push to Docker Hub
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,11 +39,7 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
-  push_to_hub:
-    name: Push to Docker Hub
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+
       - name: Checkout
         uses: actions/checkout@v2
 
