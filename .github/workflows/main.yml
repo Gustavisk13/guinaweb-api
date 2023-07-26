@@ -27,13 +27,14 @@ jobs:
           java-version: 17
 
       - name: Bump version and push tag
+        id: tagger
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
 
       - name: New version
-        run: mvn versions:set -DnewVersion=${{ steps.taggerDryRun.outputs.new_tag }}
+        run: mvn versions:set -DnewVersion=${{ steps.tagger.outputs.new_tag }}
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
@@ -56,7 +57,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: gustavisk/guina-api
-          tags: ${{ steps.taggerDryRun.outputs.new_tag }}
+          tags: ${{ steps.tagger.outputs.new_tag }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
