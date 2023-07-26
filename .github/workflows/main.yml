@@ -40,15 +40,14 @@ jobs:
           images: gustavisk/guina-api
           tags: ${{ steps.version.outputs.version }}
 
-      - name: Version
-        id: versionname
-        run: sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>${{ steps.version.outputs.version }}<\/span>/g" src/main/resources/templates/teste.html
-
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
           java-version: 17
+
+      - name: New version
+        run: mvn versions:set -DnewVersion=${{ steps.version.outputs.version }}
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
