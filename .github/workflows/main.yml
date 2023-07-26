@@ -84,5 +84,5 @@ jobs:
           username: ${{ env.SSH_USERNAME }}
           key: ${{ env.SSH_KEY }}
           script: |
-            sudo systemctl restart {{ steps.metadata.outputs.labels }}.service
+            sudo systemctl restart guina-api.service
             exit
