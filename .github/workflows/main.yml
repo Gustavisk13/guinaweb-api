@@ -5,37 +5,61 @@ on:
       - main
 
 env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   SSH_HOST: ${{ secrets.SSH_HOST }}
   SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
 
 jobs:
-  push_to_hub:
-    name: Push to Docker Hub
+  build_push_to_hub:
+    name: Build and Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Bump version and push tag
+        id: tagger
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+
+      - name: New version
+        run: mvn versions:set -DnewVersion=${{ steps.tagger.outputs.new_tag }}
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # - name: Upload JAR
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: guina-api
+      #     path: target/guina-api.jar
+
+      # - name: Checkout
+      #   uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.USERNAME }}
+          password: ${{ env.PASSWORD }}
 
       - name: Metadata
         id: metadata
         uses: docker/metadata-action@v3
         with:
           images: gustavisk/guina-api
-          tags: latest
-
-      - name: Version
-        id: version
-        run: sed -i -e "s/\(<span>\).*\(<\/span>\)/<span>${{ steps.metadata.outputs.tags }}<\/span>/g" src/main/resources/templates/teste.html
+          tags: ${{ steps.tagger.outputs.new_tag }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
@@ -45,15 +69,28 @@ jobs:
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+
+      - name: Push latest
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: gustavisk/guina-api:latest
   deploy:
     name: Deploy to server
     runs-on: ubuntu-latest
-    needs: push_to_hub
+    needs: build_push_to_hub
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Deploy
-        run: |
-          cd scripts
-          chmod +x deploy.sh
-          ./deploy.sh
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          key: ${{ env.SSH_KEY }}
+          script: |
+            sudo systemctl restart guinaweb-api.service
+            exit
