@@ -8,10 +8,6 @@ env:
   USERNAME: ${{ secrets.DOCKER_USERNAME }}
   PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-  SSH_KEY: ${{ secrets.SSH_KEY }}
-
 jobs:
   build_push_to_hub:
     name: Build and Push to Docker Hub
