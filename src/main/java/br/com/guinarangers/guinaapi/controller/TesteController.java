@@ -21,7 +21,7 @@ public class TesteController {
     @GetMapping("/test")
     public String test(Model model) {
         model.addAttribute("profile", activeProfile.toUpperCase());
-        model.addAttribute("version", appVersion);
+        model.addAttribute("version", "v" + appVersion);
         model.addAttribute("name", appName);
         return "teste";
     }
