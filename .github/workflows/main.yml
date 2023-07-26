@@ -68,6 +68,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: gustavisk/guina-api:latest
+
   deploy:
     name: Deploy to server
     runs-on: ubuntu-latest
