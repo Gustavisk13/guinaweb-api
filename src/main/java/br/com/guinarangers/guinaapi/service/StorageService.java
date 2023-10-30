@@ -27,10 +27,10 @@ public class StorageService {
     @Autowired
     private AmazonClient amazonClient;
 
-
     public String uploadFile(String base64, String fileName, Boolean isUpdate) {
 
         try {
+            // teste mateus gordo
             byte[] decodedBytes = Base64.decodeBase64(base64.getBytes());
 
             InputStream inputStream = new ByteArrayInputStream(decodedBytes);
@@ -49,7 +49,7 @@ public class StorageService {
             if (isUpdate) {
                 amazonClient.s3client.deleteObject(bucketName, fileName);
             }
-            
+
             amazonClient.s3client.putObject(putObjectRequest);
 
             return amazonClient.s3client.getUrl(bucketName, fileName).toString();
@@ -63,10 +63,10 @@ public class StorageService {
     public void deleteFile(String fileName) {
         try {
             amazonClient.s3client.deleteObject(bucketName, fileName);
-            
+
         } catch (AmazonServiceException e) {
             e.printStackTrace();
-            
+
         }
     }
 
